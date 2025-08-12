@@ -77,6 +77,8 @@ GET /api/v1/user/
 **Headers:**
 Authorization: Bearer <ACCESS_TOKEN>
 
+## 5. گرفتن اطلاعات کاربران
+
 **Endpoint:**
 GET /api/v1/user/{offset}/{page}
 **Headers:**
