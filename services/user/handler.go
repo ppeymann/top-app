@@ -50,7 +50,7 @@ func (h *handler) SignUp(ctx *gin.Context) {
 // @Produce				json
 //
 // @Params				input body models.MobileInput	true	"MobileInput"
-// @Success				200 {object} vendora.BaseResult{result=models.TokenBundlerOutput} 	"always return status 200 but body contains error"
+// @Success				200 {object} otpapp.BaseResult{result=models.TokenBundlerOutput} 	"always return status 200 but body contains error"
 // @Router				/api/v1/user/login	[post]
 func (h *handler) SignIn(ctx *gin.Context) {
 	in := &models.MobileInput{}

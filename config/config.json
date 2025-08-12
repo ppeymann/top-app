@@ -13,11 +13,16 @@
       "jwt": {
         "token_expire": 518400,
         "refresh_expire": 1036800,
-        "issuer": "www.metamedland.com",
-        "audience": "www.metamedland.com",
+        "issuer": "otpapp.com",
+        "audience": "otpapp.com",
         "subject_key": "sub",
         "identity_key": "jti"
       }, 
+      "redis": {
+        "addr":     "localhost:6379",
+        "password": "bBMUvLtS8KYzxuEXc0Mkj34c4Ph7eGOxMggCtictqSw0KP09",
+        "db":       0
+      },
        "rate_limit": {
         "rate_limit_exclude_paths": [],
         "rate_limit_request_per_duration": 1000,

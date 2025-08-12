@@ -7,9 +7,11 @@ import (
 	"time"
 
 	kitLog "github.com/go-kit/log"
+	"github.com/ppeymann/top-app.git/cmd/otpapp/pkg"
 	"github.com/ppeymann/top-app.git/config"
 	"github.com/ppeymann/top-app.git/env"
 	"github.com/ppeymann/top-app.git/server"
+	"github.com/redis/go-redis/v9"
 	pg "gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -30,7 +32,7 @@ func main() {
 		return
 	}
 
-	_, err = gorm.Open(pg.Open(env.GetEnv("DSN", "")), &gorm.Config{SkipDefaultTransaction: true})
+	db, err := gorm.Open(pg.Open(env.GetEnv("DSN", "")), &gorm.Config{SkipDefaultTransaction: true})
 	if err != nil {
 		log.Fatal(err)
 
@@ -45,8 +47,19 @@ func main() {
 	// Service Logger
 	sl := kitLog.With(logger, "component", "http")
 
+	redisClientOpt := &redis.Options{
+		Addr:     config.Redis.Addr,
+		Password: config.Redis.Password,
+		DB:       config.Redis.DB,
+	}
+
+	redisClient := redis.NewClient(redisClientOpt)
+
 	// Server instance
-	svr := server.NewServer(sl, config)
+	svr := server.NewServer(sl, config, redisClient)
+
+	// --------   SERVICES   --------
+	pkg.InitUserService(db, sl, config, svr)
 
 	// listen and serve...
 	svr.Listen()

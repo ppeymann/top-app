@@ -66,10 +66,18 @@ func (s *service) Login(ctx *gin.Context, mobile string) *otpapp.BaseResult {
 		}
 	}
 
+	if user.Verification != "" && !user.IsVerificationExpired() {
+		return &otpapp.BaseResult{
+			Status: http.StatusOK,
+			Errors: []string{"previous otp not expired, please wait a few minutes"},
+		}
+	}
+
 	code := utils.RandNumberDigits(6)
 	exp := time.Now().Add(180 * time.Second).UTC().Unix()
 
-	if err := s.repo.SetOtp(user.ID, code, exp); err != nil {
+	err = s.repo.SetOtp(user.ID, code, exp)
+	if err != nil {
 		return &otpapp.BaseResult{
 			Status: http.StatusOK,
 			Errors: []string{err.Error()},
@@ -111,6 +119,14 @@ func (s *service) OtpVerify(in *models.OtpInput, ctx *gin.Context) *otpapp.BaseR
 
 	user.Verification = ""
 	user.VerificationExpire = time.Now().UTC().Unix()
+
+	err = s.repo.Update(user)
+	if err != nil {
+		return &otpapp.BaseResult{
+			Status: http.StatusOK,
+			Errors: []string{err.Error()},
+		}
+	}
 
 	paseto, err := auth.NewPasetoMaker(env.GetEnv("JWT", ""))
 	if err != nil {

@@ -22,6 +22,8 @@ type (
 
 		Jwt Jwt `json:"jwt"`
 
+		Redis RedisConfig `json:"redis"`
+
 		RateLimit RateLimitConfig `json:"rate_limit"`
 	}
 
@@ -67,6 +69,12 @@ type (
 		RateLimitRequestPerDuration int64    `json:"rate_limit_request_per_duration"`
 		RateLimitDurationSeconds    int64    `json:"rate_limit_duration_seconds"`
 		Enabled                     bool     `json:"enabled"`
+	}
+
+	RedisConfig struct {
+		Addr     string `json:"addr"`
+		DB       int    `json:"db"`
+		Password string `json:"password"`
 	}
 )
 

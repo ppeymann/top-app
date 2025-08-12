@@ -29,11 +29,6 @@ func (v *validationService) Login(ctx *gin.Context, mobile string) *otpapp.BaseR
 
 // OtpVerify implements models.UserService.
 func (v *validationService) OtpVerify(in *models.OtpInput, ctx *gin.Context) *otpapp.BaseResult {
-	err := validations.Validate(in, v.schema)
-	if err != nil {
-		return err
-	}
-
 	return v.next.OtpVerify(in, ctx)
 }
 

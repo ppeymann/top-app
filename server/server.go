@@ -16,6 +16,7 @@ import (
 	"github.com/ppeymann/top-app.git/config"
 	"github.com/ppeymann/top-app.git/docs"
 	"github.com/ppeymann/top-app.git/env"
+	"github.com/redis/go-redis/v9"
 
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
@@ -27,17 +28,19 @@ type Server struct {
 	Logger        kitlog.Logger
 	paseto        auth.TokenMaker
 	instrumenting serviceInstrumenting
+	redis         *redis.Client
 }
 
 // EnvMode specified the running env 'release' represents production mode and ” represents development.
 // it depended on gin GIN_MODE env for unifying and simplicity of setting.
 var EnvMode = ""
 
-func NewServer(logger kitlog.Logger, conf *config.Configuration) *Server {
+func NewServer(logger kitlog.Logger, conf *config.Configuration, redis *redis.Client) *Server {
 	svr := &Server{
 		Logger:        logger,
 		Config:        conf,
 		instrumenting: newServiceInstrumenting(),
+		redis:         redis,
 	}
 
 	router := gin.New()
@@ -57,6 +60,11 @@ func NewServer(logger kitlog.Logger, conf *config.Configuration) *Server {
 
 	// binding global
 	router.Use(svr.metrics())
+
+	// enable api rate limit if expected and enabled in config file
+	if conf.RateLimit.Enabled {
+		router.Use(svr.redisRateLimit())
+	}
 
 	if env.GetEnv("CORS_ENABLE", "false") == "true" {
 		router.Use(svr.cors())

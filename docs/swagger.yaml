@@ -1,4 +1,165 @@
+definitions:
+  gorm.DeletedAt:
+    properties:
+      time:
+        type: string
+      valid:
+        description: Valid is true if Time is not NULL
+        type: boolean
+    type: object
+  models.MobileInput:
+    properties:
+      mobile:
+        type: string
+    type: object
+  models.TokenBundlerOutput:
+    properties:
+      expire:
+        description: Expire is time for expire token
+        type: string
+      refresh:
+        description: Refresh is string that for refresh old token
+        type: string
+      token:
+        description: Token is string that hashed by paseto
+        type: string
+    type: object
+  models.UserEntity:
+    properties:
+      createdAt:
+        type: string
+      deletedAt:
+        $ref: '#/definitions/gorm.DeletedAt'
+      id:
+        type: integer
+      mobile:
+        description: Mobile
+        type: string
+      updatedAt:
+        type: string
+    type: object
+  otpapp.BaseResult:
+    properties:
+      errors:
+        description: Errors provides list off error that occurred in processing request
+        items:
+          type: string
+        type: array
+      result:
+        description: Result single/array of any type (object/number/string/boolean)
+          that returns as response
+      result_count:
+        description: ResultCount specified number of records that returned in result_count
+          field expected result been array.
+        type: integer
+    type: object
 info:
   contact: {}
-paths: {}
+paths:
+  /api/v1/user:
+    get:
+      consumes:
+      - application/json
+      description: get user information
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: always return status 200 but body contains error
+          schema:
+            allOf:
+            - $ref: '#/definitions/otpapp.BaseResult'
+            - properties:
+                result:
+                  $ref: '#/definitions/models.UserEntity'
+              type: object
+      summary: user info
+      tags:
+      - user
+  /api/v1/user/{offset}/{page}:
+    get:
+      consumes:
+      - application/json
+      description: get all user
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/otpapp.BaseResult'
+            - properties:
+                result:
+                  items:
+                    $ref: '#/definitions/models.UserEntity'
+                  type: array
+              type: object
+      security:
+      - bearer: []
+      summary: get all user
+      tags:
+      - user
+  /api/v1/user/login:
+    post:
+      consumes:
+      - application/json
+      description: log in with specific mobile number
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: always return status 200 but body contains error
+          schema:
+            allOf:
+            - $ref: '#/definitions/otpapp.BaseResult'
+            - properties:
+                result:
+                  $ref: '#/definitions/models.TokenBundlerOutput'
+              type: object
+      summary: log in
+      tags:
+      - user
+  /api/v1/user/otp:
+    post:
+      consumes:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/otpapp.BaseResult'
+            - properties:
+                result:
+                  $ref: '#/definitions/models.UserEntity'
+              type: object
+      summary: otp verification
+      tags:
+      - user
+  /api/v1/user/signup:
+    post:
+      consumes:
+      - application/json
+      description: Create New user
+      parameters:
+      - description: MobileInput
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/models.MobileInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: always return status 200 but body contains error
+          schema:
+            allOf:
+            - $ref: '#/definitions/otpapp.BaseResult'
+            - properties:
+                result:
+                  $ref: '#/definitions/models.TokenBundlerOutput'
+              type: object
+      summary: Create New user
+      tags:
+      - user
 swagger: "2.0"

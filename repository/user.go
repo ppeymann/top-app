@@ -83,7 +83,8 @@ func (r *userRepo) FindAllUser(page int32, limit int32) ([]models.UserEntity, er
 // FindByID implements models.UserRepository.
 func (r *userRepo) FindByID(id uint) (*models.UserEntity, error) {
 	user := &models.UserEntity{}
-	if err := r.Model().Where("id = ?", id).First(user).Error; err != nil {
+	err := r.Model().Where("id = ?", id).First(user).Error
+	if err != nil {
 		return nil, err
 	}
 
@@ -105,7 +106,7 @@ func (r *userRepo) SetOtp(id uint, otp string, expire int64) error {
 
 // Update implements models.UserRepository.
 func (r *userRepo) Update(user *models.UserEntity) error {
-	return r.Model().Save(user).Error
+	return r.pg.Save(user).Error
 }
 
 // Migrate implements models.UserRepository.
