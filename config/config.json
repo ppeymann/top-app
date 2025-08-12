@@ -1,0 +1,27 @@
+{
+    "listener": {
+        "host": "0.0.0.0",
+        "port": 8080,
+        "cert": "",
+        "key": "",
+        "allowed_hosts": [
+          "*"
+        ],
+        "ssl_host": "",
+        "sessions_secret": ""
+      },
+      "jwt": {
+        "token_expire": 518400,
+        "refresh_expire": 1036800,
+        "issuer": "www.metamedland.com",
+        "audience": "www.metamedland.com",
+        "subject_key": "sub",
+        "identity_key": "jti"
+      }, 
+       "rate_limit": {
+        "rate_limit_exclude_paths": [],
+        "rate_limit_request_per_duration": 1000,
+        "rate_limit_duration_seconds": 10,
+        "enabled": true
+      }
+}
