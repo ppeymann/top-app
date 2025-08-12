@@ -26,7 +26,9 @@ POST /api/v1/user/signup
 }
 ```
 
-Response:
+**Response:**
+
+```
 {
 "result": {
 "accessToken": "JWT_TOKEN",
@@ -35,30 +37,52 @@ Response:
 "errors": [],
 "status": 200
 }
+```
 
+## 2. ورود (Sign In)
+
+ورود کاربر با شماره موبایل.
+**Endpoint:**  
 POST /api/v1/user/signin
 
-Request Body:
+**Request Body:**
+
+```
 {
 "mobile": "09123456789"
 }
+```
 
+## 3. ارسال otp
+
+**Endpoint:**  
 POST /api/v1/user/otp
 
-Request Body:
+**Request Body:**
+
+```
 {
 "mobile": "09123456789",
 "otp": "123456"
 }
 
+```
+
+## 4. گرفتن اطلاعات کاربری
+
+**Endpoint:**
+
 GET /api/v1/user/
-Headers:
+
+**Headers:**
 Authorization: Bearer <ACCESS_TOKEN>
 
+**Endpoint:**
 GET /api/v1/user/{offset}/{page}
-Headers:
+**Headers:**
 Authorization: Bearer <ACCESS_TOKEN>
 
+```
 Response:
 {
 "result": [
@@ -71,3 +95,4 @@ Response:
 "errors": [],
 "status": 200
 }
+```
