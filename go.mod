@@ -16,6 +16,7 @@ require (
 	github.com/swaggo/files v1.0.1
 	github.com/swaggo/gin-swagger v1.6.0
 	github.com/swaggo/swag v1.16.6
+	github.com/thoas/go-funk v0.9.3
 	github.com/xeipuuv/gojsonschema v1.2.0
 	golang.org/x/crypto v0.41.0
 	gorm.io/driver/postgres v1.6.0
