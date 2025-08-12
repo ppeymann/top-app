@@ -46,6 +46,8 @@ type (
 		SetOtp(id uint, otp string, expire int64) error
 		Update(user *UserEntity) error
 		FindAllUser(page, limit int32) ([]UserEntity, error)
+
+		otpapp.BaseRepository
 	}
 
 	// UserHandler represents method signatures for user handlers.
